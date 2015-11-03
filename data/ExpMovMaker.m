@@ -30,9 +30,9 @@ plot(pos_01, kymoRed_01(frameNumber,:));
 
 % INPUT: Set which profile is animated and pick the correct position and 
 % time axes.
-kymo = kymoRed_02;
-pos = pos_02;
-time = time_02;
+kymo = kymoGreen_01;
+pos = pos_01;
+time = time_01;
 
 % Make the video writer object that will assemble the movie.
 Mov = VideoWriter('temp.avi');
@@ -43,6 +43,7 @@ Mov.FrameRate = 4;
 % Open the video writer before beginning.
 open(Mov);
 
+figure()
 % Loop over all green images, display them, and add them to the movie.
 for i=1:size(kymo,1)
     % Give the profile a handle so I can delete it later.
@@ -61,7 +62,9 @@ for i=1:size(kymo,1)
     % Get rid of trace and annotation without closing figure.
     delete(h1);
     delete(h2);
+% keyboard
 end
+
 
 %Close the final figure.
 close all

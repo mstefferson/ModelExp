@@ -1,0 +1,22 @@
+           trial: 501
+          SaveMe: 1
+    ChemOnEndPts: 1
+              Nx: 128
+            Lbox: 1
+              Lr: 100
+            A_BC: 'Res'
+            C_BC: 'VN'
+             Kon: 4.1667e+04
+            Koff: 4.1667
+           KDinv: 10000
+              DA: 0
+              nu: 0.0345
+             Dnl: 1
+          NLcoup: 1
+              Bt: 0.0020
+              AL: 5.0000e-05
+              AR: 0
+
+Starting run 
+Elapsed time is 2.790015 seconds.
+Finished run

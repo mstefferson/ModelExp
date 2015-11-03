@@ -1,6 +1,6 @@
 % ChemDiffMainDirVn
 % A bc Dir C bc VN
-function [A,C,DidIBreak,SteadyState] = ChemDiffMainDirVn(ParamObj,TimeObj,AnalysisObj)
+function [A_rec,C_rec,DidIBreak,SteadyState] = ChemDiffMainDirVn(ParamObj,TimeObj,AnalysisObj)
 % Define commonly used variables
 DidIBreak = 0;
 Nx = ParamObj.Nx;
@@ -25,10 +25,12 @@ Concstr = sprintf('ParamObj.ParamObj.Bt=%.1e\nAL=%.1e\nAR=%.2e',...
     IntConcMaker(ParamObj.AL, ParamObj.AR, ParamObj.Bt, ...
    ParamObj.KDinv, ParamObj.Lbox, x,ParamObj.NLcoup);% A = Alin;
 % C(1) = CL; C(end) = CR;
+A(2:end) = ParamObj.AR;
 C(1) = 0; C(end) = 0;
 % keyboard
 v = [A';C'];
 
+% keyboard
 % Concentration records
 A_rec   = zeros(Nx,TimeObj.N_rec);
 C_rec   = zeros(Nx,TimeObj.N_rec);
@@ -50,7 +52,9 @@ else
 end
 
 %Build operators and matrices
-[Lop]    = LopMakerRdDirVn(Nx,dx,ParamObj.Bt,ParamObj.Kon,ParamObj.Koff,1,ParamObj.nu);
+[Lop]    = LopMakerRdDirVn(Nx,dx,ParamObj.Bt,...
+    ParamObj.Kon,ParamObj.Koff,ParamObj.DA,ParamObj.nu);
+% keyboard
 [LMcn,RMcn] = MatMakerCN(  Lop, TimeObj.dt, 2 * Nx );
 % keyboard
 % NonLinear Include endpoints Dirichlet, then set = 0
@@ -85,7 +89,7 @@ end
 SteadyState = 0;
 if AnalysisObj.ShowRunTime; tic; end
 for t = 1: TimeObj.N_time - 1 % t * dt  = time
-    
+%     keyboard
     % Update
     vPrev = v;
     NLprev = NL;
@@ -103,7 +107,7 @@ for t = 1: TimeObj.N_time - 1 % t * dt  = time
     end
     if ParamObj.Dnl ~= 1
         [NLdiff] = ConcDepDiffCalcNd1stOrd(v,ParamObj.Dnl,ParamObj.Bt,Nx,dx);
-NLdiff(1) = (Dnl - 1) / Bt * ...
+  NLdiff(1) = (Dnl - 1) / Bt * ...
         (v(Nx+1) + v(Nx+2) ) .* (v(2) - v(1) ) / ( dx^2 );
     NLdiff(Nx) = (Dnl - 1) / Bt * ...
         (v(2*Nx-1) + v(2*Nx) ) .* (v(Nx-1) - v(Nx) ) / ( dx^2 );
@@ -137,6 +141,7 @@ NLdiff(1) = (Dnl - 1) / Bt * ...
         end
         % Check for steady state. max() is ok with NaN
         if max( abs( (v-vNext)./v ) ) < TimeObj.ss_epsilon
+            keyboard
             A_rec = A_rec(:,1:j_record);
             C_rec = C_rec(:,1:j_record);
             if AnalysisObj.TrackAccumFromFlux

@@ -1,6 +1,6 @@
 % ChemDiffMainDirVn
 % A bc Res C bc VN
-function [A,C,DidIBreak,SteadyState] = ChemDiffMainResVn(ParamObj,TimeObj,AnalysisObj)
+function [A_rec,C_rec,DidIBreak,SteadyState] = ChemDiffMainResVn(ParamObj,TimeObj,AnalysisObj)
 % Define commonly used variables
 DidIBreak = 0;
 Nx = ParamObj.Nx;
